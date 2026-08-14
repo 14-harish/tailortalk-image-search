@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+.venv312/
+venv/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated embeddings / evaluation data
+data/*.npy
+
+# Dataset images
+data/images/
+
+# Qdrant runtime files
+data/qdrant/.lock
+data/qdrant/collection/*/wal/

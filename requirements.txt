@@ -1,0 +1,9 @@
+streamlit
+torch
+transformers
+Pillow
+numpy
+pandas
+qdrant-client
+requests
+groq
