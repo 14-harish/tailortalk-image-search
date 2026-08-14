@@ -4,7 +4,7 @@ import requests
 from PIL import Image
 from langchain_core.tools import tool
 
-from search import search_image
+from fashion_search import search_image
 
 
 @tool

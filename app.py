@@ -1,10 +1,12 @@
-import os
-import tempfile
+import io
 
+import requests
 import streamlit as st
 from PIL import Image
 
 from fashion_search import search_image
+from agent import run_agent
+
 
 # ==========================================
 # Page configuration
@@ -55,10 +57,11 @@ if st.button(
 ):
 
     image = None
+    results = []
 
-    # -------------------------------
+    # ==========================================
     # Uploaded image
-    # -------------------------------
+    # ==========================================
 
     if uploaded_file is not None:
 
@@ -74,16 +77,14 @@ if st.button(
                 f"Could not open uploaded image: {e}"
             )
 
-    # -------------------------------
+
+    # ==========================================
     # Image URL
-    # -------------------------------
+    # ==========================================
 
     elif image_url:
 
         try:
-
-            import requests
-            import io
 
             response = requests.get(
                 image_url,
@@ -132,10 +133,55 @@ if st.button(
 
             try:
 
-                results = search_image(
-                    image,
-                    top_k=5
-                )
+                # ----------------------------------
+                # URL input:
+                # Use LLM tool-calling agent
+                # ----------------------------------
+
+                if image_url:
+
+                    agent_output = run_agent(
+                        image_url
+                    )
+
+                    tool_result = agent_output.get(
+                        "tool_result"
+                    )
+
+                    if (
+                        isinstance(tool_result, dict)
+                        and "results" in tool_result
+                    ):
+
+                        results = tool_result["results"]
+
+                    elif (
+                        isinstance(tool_result, dict)
+                        and "error" in tool_result
+                    ):
+
+                        st.error(
+                            tool_result["error"]
+                        )
+
+                    else:
+
+                        st.error(
+                            "The agent did not return search results."
+                        )
+
+
+                # ----------------------------------
+                # Uploaded image:
+                # Direct FashionCLIP search
+                # ----------------------------------
+
+                else:
+
+                    results = search_image(
+                        image,
+                        top_k=5
+                    )
 
             except Exception as e:
 
@@ -210,3 +256,9 @@ if st.button(
                     )
 
                 st.divider()
+
+        elif image is not None:
+
+            st.warning(
+                "No similar sarees were found."
+            )
