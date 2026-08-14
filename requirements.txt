@@ -7,3 +7,5 @@ pandas
 qdrant-client
 requests
 groq
+langchain-groq
+langchain-core
